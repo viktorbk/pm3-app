@@ -20,6 +20,7 @@ coverage
 *.lcov
 
 # Build
+release/
 build/Release
 *.tsbuildinfo
 

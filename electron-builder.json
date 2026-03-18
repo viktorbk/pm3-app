@@ -1,0 +1,30 @@
+{
+  "appId": "com.viktorbk.pm3",
+  "productName": "PM3",
+  "directories": {
+    "output": "release"
+  },
+  "files": [
+    "dist/**/*",
+    "dist-electron/**/*"
+  ],
+  "mac": {
+    "target": ["dmg", "zip"],
+    "icon": null,
+    "category": "public.app-category.utilities",
+    "artifactName": "PM3-${version}-${os}-${arch}.${ext}"
+  },
+  "win": {
+    "target": ["nsis", "zip"],
+    "artifactName": "PM3-${version}-${os}-${arch}.${ext}"
+  },
+  "nsis": {
+    "oneClick": true,
+    "allowToChangeInstallationDirectory": false
+  },
+  "linux": {
+    "target": ["AppImage", "deb"],
+    "category": "Utility",
+    "artifactName": "PM3-${version}-${os}-${arch}.${ext}"
+  }
+}
