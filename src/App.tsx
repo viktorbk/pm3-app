@@ -5,8 +5,14 @@ import ScanPanel from './components/ScanPanel'
 import ResultsPanel from './components/ResultsPanel'
 import WritePanel from './components/WritePanel'
 import LogViewer from './components/LogViewer'
+import SetupDialog from './components/SetupDialog'
+import HistoryPanel from './components/HistoryPanel'
+
+const SETUP_DONE_KEY = 'pm3-setup-done'
 
 export default function App() {
+  const [showSetup, setShowSetup] = useState(() => !localStorage.getItem(SETUP_DONE_KEY))
+  const [showHistory, setShowHistory] = useState(false)
   const [step, setStep] = useState<AppStep>('status')
   const [deviceStatus, setDeviceStatus] = useState<DeviceStatusType | null>(null)
   const [statusLoading, setStatusLoading] = useState(true)
@@ -29,8 +35,13 @@ export default function App() {
   }, [step])
 
   useEffect(() => {
-    refreshStatus()
-  }, [])
+    if (!showSetup) refreshStatus()
+  }, [showSetup])
+
+  const handleSetupDismiss = () => {
+    localStorage.setItem(SETUP_DONE_KEY, '1')
+    setShowSetup(false)
+  }
 
   const handleScanComplete = (result: ScanResult) => {
     setScanResult(result)
@@ -87,6 +98,12 @@ export default function App() {
 
   return (
     <div className="app">
+      {/* Setup Dialog */}
+      {showSetup && <SetupDialog onDismiss={handleSetupDismiss} />}
+
+      {/* History Panel */}
+      {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} />}
+
       {/* Header */}
       <div className="header">
         <div className="header-left">
@@ -118,6 +135,17 @@ export default function App() {
               </div>
             </div>
           )}
+          <button
+            className="btn btn-sm"
+            onClick={() => setShowHistory(true)}
+            title="View operation history"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" strokeLinecap="round" />
+            </svg>
+            History
+          </button>
         </div>
       </div>
 
@@ -131,7 +159,7 @@ export default function App() {
             loading={statusLoading}
           />
 
-          {/* Saved Dumps quick info */}
+          {/* Current card info */}
           {scanResult?.found && (
             <div className="sidebar-section fade-in">
               <div className="sidebar-title">Current Card</div>

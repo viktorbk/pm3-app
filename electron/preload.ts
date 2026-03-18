@@ -14,4 +14,5 @@ contextBridge.exposeInMainWorld('pm3', {
   getLogs: (limit?: number) => ipcRenderer.invoke('db:get-logs', limit),
   clearLogs: () => ipcRenderer.invoke('db:clear-logs'),
   getDumps: () => ipcRenderer.invoke('db:get-dumps'),
+  openExternal: (url: string) => ipcRenderer.invoke('app:open-external', url),
 })

@@ -106,6 +106,7 @@ declare global {
       getLogs: (limit?: number) => Promise<LogEntry[]>
       clearLogs: () => Promise<void>
       getDumps: () => Promise<DumpEntry[]>
+      openExternal: (url: string) => Promise<void>
     }
   }
 }

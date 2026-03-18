@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import path from 'path'
 import {
   getDeviceStatus,
@@ -200,6 +200,13 @@ app.whenReady().then(() => {
 
   ipcMain.handle('db:get-dumps', async () => {
     return getDumps()
+  })
+
+  // App
+  ipcMain.handle('app:open-external', async (_event, url: string) => {
+    if (url.startsWith('https://')) {
+      await shell.openExternal(url)
+    }
   })
 })
 
