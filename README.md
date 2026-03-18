@@ -2,6 +2,74 @@
 
 A desktop app for reading, dumping, and cloning RFID cards using the [Proxmark3](https://github.com/RfidResearchGroup/proxmark3) device. Built with Electron, React, and Vite.
 
+## Install
+
+### macOS & Linux
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/viktorbk/pm3-app/main/install.sh | bash
+```
+
+### Windows
+
+```powershell
+powershell -c "irm https://raw.githubusercontent.com/viktorbk/pm3-app/main/install.ps1 | iex"
+```
+
+<details>
+<summary>View install script (macOS & Linux)</summary>
+
+The script performs these steps:
+
+1. Detects your OS and architecture
+2. Checks for `git` and `bun`/`npm`
+3. Clones the repository to a temp directory
+4. Installs dependencies and builds the Electron app
+5. **macOS**: Mounts the DMG and copies `PM3.app` to `/Applications`
+6. **Linux**: Copies the AppImage to `~/.local/bin/pm3-app`
+7. Cleans up the temp directory
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/viktorbk/pm3-app/main/install.sh | bash
+```
+
+**Requirements**: `git` and either `bun` or `npm`/`node`
+
+[View full script](install.sh)
+</details>
+
+<details>
+<summary>View install script (Windows)</summary>
+
+The script performs these steps:
+
+1. Checks for `git` and `bun`/`npm`
+2. Clones the repository to a temp directory
+3. Installs dependencies and builds the Electron app
+4. Runs the NSIS installer or extracts to `%LOCALAPPDATA%\Programs\PM3`
+5. Adds to user PATH
+6. Cleans up the temp directory
+
+```powershell
+powershell -c "irm https://raw.githubusercontent.com/viktorbk/pm3-app/main/install.ps1 | iex"
+```
+
+**Requirements**: `git` and either `bun` or `npm`/`node`
+
+[View full script](install.ps1)
+</details>
+
+### Manual build
+
+```bash
+git clone https://github.com/viktorbk/pm3-app.git
+cd pm3-app
+npm install    # or: bun install
+npm run package  # builds for your current platform
+```
+
+The packaged app will be in the `release/` folder.
+
 ## Features
 
 - **Device Status** — connection, FPGA, flash memory, antenna voltage monitoring
@@ -10,7 +78,7 @@ A desktop app for reading, dumping, and cloning RFID cards using the [Proxmark3]
 - **Key Cracking** — automatic Mifare Classic key recovery via `autopwn`
 - **Card Cloning** — write dumps to Gen1a/Gen2 magic cards (HF) or T55xx blanks (LF)
 - **Card Gallery** — visual selector for target card types (cards, key fobs, coins, wristbands, stickers)
-- **Operation Log** — persistent history of all operations
+- **Operation Log** — persistent history of all operations with re-write from saved dumps
 - **CLI Script** — standalone `clone-card.sh` bash script for terminal-only cloning
 
 ## Supported Cards
@@ -36,26 +104,6 @@ A desktop app for reading, dumping, and cloning RFID cards using the [Proxmark3]
 - **Proxmark3 client** (`pm3`) installed and in your PATH
   - Install via Homebrew: `brew install proxmark3`
   - Or build from source: [RfidResearchGroup/proxmark3](https://github.com/RfidResearchGroup/proxmark3)
-
-## Quick Install (from source)
-
-### macOS / Linux
-
-```bash
-git clone https://github.com/viktorbk/pm3-app.git && cd pm3-app && npm install && npm run package
-```
-
-The built app will be in the `release/` folder:
-- **macOS**: `release/PM3-1.0.0-mac-x64.dmg`
-- **Linux**: `release/PM3-1.0.0-linux-x64.AppImage`
-
-### Windows (PowerShell)
-
-```powershell
-git clone https://github.com/viktorbk/pm3-app.git; cd pm3-app; npm install; npm run package:win
-```
-
-The installer will be at `release/PM3-1.0.0-win-x64.exe`.
 
 ## Development
 
@@ -114,9 +162,13 @@ pm3-app/
 │   │   ├── ResultsPanel.tsx   # Scan results and dump controls
 │   │   ├── WritePanel.tsx     # Write workflow with card gallery
 │   │   ├── CardGallery.tsx    # SVG card type illustrations
-│   │   └── LogViewer.tsx      # Operation history viewer
+│   │   ├── SetupDialog.tsx    # First-launch setup wizard
+│   │   ├── HistoryPanel.tsx   # Operation history & saved dumps
+│   │   └── LogViewer.tsx      # Bottom log bar
 │   ├── types.ts          # Shared TypeScript types
 │   └── index.css         # Dark theme styles
+├── install.sh            # One-line installer (macOS/Linux)
+├── install.ps1           # One-line installer (Windows)
 ├── clone-card.sh         # Standalone CLI clone script
 └── package.json
 ```
