@@ -102,7 +102,7 @@ export default function App() {
       {showSetup && <SetupDialog onDismiss={handleSetupDismiss} />}
 
       {/* History Panel */}
-      {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} />}
+      {showHistory && <HistoryPanel onClose={() => setShowHistory(false)} onWriteDump={() => {}} />}
 
       {/* Header */}
       <div className="header">
